@@ -23,7 +23,8 @@ public class Cache<K, V> {
 		return val;
 	}
 
-	public void put(K key, V value) throws NotFoundException {
+	public void put(K key, V value) // throws NotFoundException 
+	{
 		if(storage.isFull()) {
 			K evicted = policy.evict();
 			storage.remove(evicted);

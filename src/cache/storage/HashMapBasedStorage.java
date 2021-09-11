@@ -44,9 +44,10 @@ public class HashMapBasedStorage<K, V> implements Storage<K, V> {
 	}
 	
 	@Override
-	public void remove(K key) throws NotFoundException {
-		if(map.containsKey(key))
-			throw new NotFoundException("Key {} does not exists", key);
+	public void remove(K key) //throws NotFoundException 
+	{
+		//if(!map.containsKey(key))
+		//	throw new NotFoundException("Key {} does not exists", key);
 		map.remove(key);
 	}
 	

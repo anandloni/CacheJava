@@ -1,29 +1,44 @@
 package cache;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import cache.exception.NotFoundException;
 import cache.factory.CacheFactory;
 
 public class CacheTest {
 	public static void main(String[] args) throws NotFoundException {
-		CacheFactory<String, String> factory = new CacheFactory<String, String>();
-		Cache<String, String> cache = factory.createCache(3);
+		Cache<Integer, Integer> intCache = new CacheFactory<Integer, Integer>().createCache(5);
+		ExecutorService service = Executors.newFixedThreadPool(2);
+		Runnable producer = () -> {
+			for(int i=0; i< 10; i++) {
+				intCache.put(i, i);
+				System.out.println("Added: "+i);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
 		
-		cache.put("name", "aloni");
-		//System.out.println(cache.get("name"));
-		cache.put("age", "38");
-		//System.out.println(cache.get("name"));
-		cache.put("exp", "16");
-		//System.out.println(cache.get("name"));
-		cache.put("place", "Pune");
+		Runnable consumer = () -> {
+			for(int i=0; i< 10; i++) {
+				Integer val = intCache.get(i);
+				System.out.println("Accessed: "+i+ " Got:"+val);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
 		
-		System.out.println("Name: "+ cache.get("name")); // place exp age
-		System.out.println("Age: "+ cache.get("age")); // age place exp
-		cache.put("comp", "Vmware"); // comp age place
-		System.out.println("Exp: "+cache.get("exp")); // null
-		System.out.println("Place: "+cache.get("place")); //place comp age
-		System.out.println("Age: "+cache.get("age"));// age place comp
-		cache.put("name", "Vmware"); 
+		service.submit(producer);
+		//service.submit(producer);
+		service.submit(consumer);
+		//service.submit(consumer);
 		
-		
+		service.shutdown();
 	}
 }
