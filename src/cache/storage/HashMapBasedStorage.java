@@ -1,11 +1,9 @@
 package cache.storage;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import cache.exception.NotFoundException;
 
 public class HashMapBasedStorage<K, V> implements Storage<K, V> {
 
@@ -13,11 +11,11 @@ public class HashMapBasedStorage<K, V> implements Storage<K, V> {
     Lock writeLock = lock.writeLock();
     Lock readLock = lock.readLock();
 	
-    ConcurrentHashMap<K,V> map;
+    HashMap<K,V> map;
 	int capacity;
 	
 	public HashMapBasedStorage(int capacity) {
-		map = new ConcurrentHashMap<>();
+		map = new HashMap<>();
 		this.capacity = capacity;
 	}
 	
